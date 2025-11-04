@@ -1,0 +1,204 @@
+
+/* === FULL MAKEOVER: High-Contrast NEO Pixel Theme =====================
+   Goals: no dark-on-dark, white instructions text, fixed toggle containment,
+   organized modals with clear timer/text hierarchy, bright board.
+======================================================================== */
+
+/* Palette (tunable) */
+:root {
+  --neo-bg: #261b33;           /* page bg */
+  --neo-ink: #FFFFFF;          /* main text - pure white for contrast */
+  --neo-muted: #E1D9F2;        /* muted text */
+  --neo-panel: #3c2a56;        /* panel base (lighter than page) */
+  --neo-panel-2: #4d3871;      /* header/accent */
+  --neo-border: #000000;       /* 3px outer border */
+  --neo-border-in: #2a1e3b;    /* 2px inner border */
+  --neo-cell: #443064;         /* board cell */
+  --neo-cell-alt: #513a7a;     /* alt tile */
+  --neo-gold: #FFC933;         /* primary yellow */
+  --neo-gold-dark: #D9A700;
+  --neo-purple: #8A52D1;
+  --neo-shadow: #6E1E1E;       /* drop shadow */
+}
+
+/* Base */
+@font-face {
+  font-family: 'PixelAE';
+  src: url('../assets/PixelAE-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+html { -webkit-font-smoothing: none; }
+body.neo-theme {
+  background: var(--neo-bg);
+  color: var(--neo-ink);
+  image-rendering: pixelated;
+}
+
+.pixel-bg {
+  background-image:
+    linear-gradient(rgba(38,27,51,0.94), rgba(38,27,51,0.94)),
+    url('../assets/pixel_background.png');
+  background-size: auto, 128px 128px;
+  background-repeat: repeat;
+  background-blend-mode: multiply;
+}
+
+/* CONTAINERS */
+.panel, .card, .modal, .settings-box, .scoreboard, .board, .form-box {
+  border-radius: 0;
+  border: 3px solid var(--neo-border);
+  box-shadow:
+    inset 0 0 0 2px var(--neo-border-in),
+    0 0 0 2px var(--neo-border);
+  background: var(--neo-panel);
+  color: var(--neo-ink);
+}
+.settings-box-header, .panel .header, .card .header, .modal .header {
+  background: var(--neo-panel-2);
+  border-bottom: 3px solid var(--neo-border);
+  box-shadow: inset 0 0 0 2px var(--neo-border-in);
+  color: var(--neo-ink);
+}
+
+/* INPUTS & CHIPS */
+input[type=text], input[type=number], select, textarea {
+  border: 3px solid var(--neo-border);
+  box-shadow: inset 0 0 0 2px var(--neo-border-in);
+  border-radius: 0;
+  background: #2f2244;
+  color: var(--neo-ink);
+}
+input::placeholder { color: var(--neo-muted); }
+
+.chip, .badge {
+  border: 3px solid var(--neo-border);
+  box-shadow: inset 0 0 0 2px var(--neo-border-in);
+  border-radius: 0;
+  background: #4a356a;
+  color: var(--neo-ink);
+}
+
+/* BUTTONS */
+.btn {
+  display: inline-block;
+  border: 3px solid var(--neo-border);
+  border-radius: 0;
+  padding: 10px 18px;
+  font-family: 'PixelAE','Press Start 2P',system-ui,sans-serif;
+  color: var(--neo-ink);
+  background: #4d3871;
+  box-shadow: 0 0 0 2px var(--neo-border), 3px 3px 0 0 var(--neo-shadow);
+  transition: transform 30ms steps(2,end);
+}
+.btn:hover { transform: translate(-1px,-1px); }
+.btn:active { transform: translate(2px,2px); box-shadow: 0 0 0 2px var(--neo-border), 1px 1px 0 0 var(--neo-shadow); }
+
+/* Primary Yellow for Start & Instructions */
+.btn-warning,
+#start-game-btn,
+#open-instructions-home-btn,
+#open-instructions-game-btn {
+  background: linear-gradient(var(--neo-gold), var(--neo-gold-dark));
+  color: #1a1000; /* readable on yellow */
+}
+/* Force Instructions text white if requested */
+#open-instructions-home-btn, #open-instructions-game-btn { color: #FFFFFF; }
+
+/* TOGGLE (Sounds) - contained & RTL-safe */
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+  line-height: 0;
+  white-space: nowrap;
+}
+.switch .slider {
+  display: inline-block;
+  width: 56px;
+  height: 28px;
+  position: relative;
+  border: 3px solid var(--neo-border);
+  box-shadow: inset 0 0 0 2px var(--neo-border-in);
+  background: #3f2c5c;
+  overflow: hidden;  /* keep knob inside */
+  box-sizing: border-box;
+}
+.switch .slider::before {
+  content: "";
+  position: absolute; top: 2px; bottom: 2px;
+  width: 24px;
+  border: 3px solid var(--neo-border);
+  box-shadow: inset 0 0 0 2px var(--neo-border-in);
+  background: var(--neo-gold);
+  inset-inline-start: 2px;
+  transition: inset-inline-start 80ms steps(2,end);
+}
+.switch[aria-checked="true"] .slider { background: #6a49a0; }
+.switch[aria-checked="true"] .slider::before { inset-inline-start: calc(100% - 24px - 4px); }
+.switch .switch-text { margin-inline-start: 4px; color: var(--neo-ink); }
+
+/* Ensure parent rows center items and no overflow */
+.settings-box .settings-grid, .settings-row, .settings-grid-top, .form-group {
+  align-items: center;
+}
+.settings-box .settings-grid, .settings-row { overflow: visible; }
+
+/* BOARD - brighter tiles for contrast */
+.board {
+  background: var(--neo-panel-2);
+  padding: 8px;
+}
+.board .cell, .grid .cell {
+  border: 3px solid var(--neo-border);
+  box-shadow: inset 0 0 0 2px var(--neo-border-in);
+  background: var(--neo-cell);
+  transition: filter 60ms steps(2,end);
+}
+.board .cell:nth-child(odd) { background: var(--neo-cell-alt); }
+.board .cell:hover { filter: brightness(1.06); }
+.board .cell:active { filter: brightness(0.95); }
+
+/* MODALS - organized layout */
+.modal-overlay { backdrop-filter: blur(0.5px); }
+.modal {
+  max-width: 720px;
+  margin: 0 auto;
+}
+.modal .content {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 12px;
+}
+.modal .header { padding: 10px 12px; }
+.modal .body { padding: 12px; }
+.modal .footer { padding: 10px 12px; display: flex; gap: 8px; justify-content: flex-end; }
+
+/* Question/Timer alignment inside answer modal */
+#modal-answer .body {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 12px;
+}
+.timer-badge, #question-timer, .countdown, .timer {
+  --size: 44px;
+  min-width: var(--size);
+  height: var(--size);
+  display: inline-grid;
+  place-items: center;
+  border: 3px solid var(--neo-border);
+  box-shadow: inset 0 0 0 2px var(--neo-border-in);
+  background: var(--neo-gold);
+  color: #1a1000;
+  font-family: 'PixelAE','Press Start 2P',system-ui,sans-serif;
+}
+
+/* Instruction modal text color: white & readable */
+#modal-instructions .body, #modal-instructions { color: #FFFFFF; }
+#modal-instructions .body p { color: #FFFFFF; }
+
+/* Focus */
+:focus-visible { outline: 3px dashed var(--neo-gold); outline-offset: 3px; }
